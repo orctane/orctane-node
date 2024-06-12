@@ -1,7 +1,10 @@
 import { version } from '../package.json';
 import type { AxiosInstance, AxiosRequestConfig } from 'axios';
 import axios, { AxiosError, AxiosHeaders } from 'axios';
-import { OrctaneError } from './error';
+import { OrctaneError } from './utils/error';
+import { Emails } from './email';
+import { Domains } from './domains';
+import { Projects } from './projects';
 
 const defaultBaseUrl = 'https://api.orctane.com/v1';
 const defaultUserAgent = `orctane-node:${version}`;
@@ -18,6 +21,10 @@ const userAgent =
 
 export class Orctane {
   private readonly headers: AxiosHeaders;
+
+  readonly domains = new Domains(this);
+  readonly emails = new Emails(this);
+  readonly projects = Projects.factory(this);
 
   constructor(public readonly key?: string) {
     if (!key) {
@@ -46,10 +53,10 @@ export class Orctane {
     });
   }
 
-   async createRequest<T>(
+  async makeRequest<T>(
     path: string,
     options: AxiosRequestConfig = {},
-  ): Promise<{ data: T | null; error: OrctaneError | null }> {
+  ): Promise<T> {
     try {
       const response = await this.request({
         url: path,
@@ -67,5 +74,70 @@ export class Orctane {
 
       throw err;
     }
+  }
+
+  async post<T>(
+    path: string,
+    body?: unknown,
+    options: Omit<AxiosRequestConfig, 'method'> = {},
+  ) {
+    const requestOptions = {
+      method: 'POST',
+      headers: this.headers,
+      body: JSON.stringify(body),
+      ...options,
+    };
+
+    return this.makeRequest<T>(path, requestOptions);
+  }
+
+  async get<T>(path: string, options: Omit<AxiosRequestConfig, 'method'> = {}) {
+    const requestOptions = {
+      method: 'GET',
+      headers: this.headers,
+      ...options,
+    };
+
+    return this.makeRequest<T>(path, requestOptions);
+  }
+
+  async put<T>(
+    path: string,
+    entity: unknown,
+    options: Omit<AxiosRequestConfig, 'method'> = {},
+  ) {
+    const requestOptions = {
+      method: 'PUT',
+      headers: this.headers,
+      body: JSON.stringify(entity),
+      ...options,
+    };
+
+    return this.makeRequest<T>(path, requestOptions);
+  }
+
+  async patch<T>(
+    path: string,
+    entity: unknown,
+    options: Omit<AxiosRequestConfig, 'method'> = {},
+  ) {
+    const requestOptions = {
+      method: 'PATCH',
+      headers: this.headers,
+      body: JSON.stringify(entity),
+      ...options,
+    };
+
+    return this.makeRequest<T>(path, requestOptions);
+  }
+
+  async delete<T>(path: string, query?: unknown) {
+    const requestOptions = {
+      method: 'DELETE',
+      headers: this.headers,
+      body: JSON.stringify(query),
+    };
+
+    return this.makeRequest<T>(path, requestOptions);
   }
 }

@@ -109,3 +109,31 @@ export interface OrctaneErrorResponse {
 }
 
 export type Tag = { name: string; value: string };
+
+export type OrctaneSuccessResponse<T extends Record<string, unknown>> = {
+  meta: {
+    code: HttpStatus;
+    message?: string;
+  };
+  data: T;
+};
+
+export type OrctaneListResponse<T extends Record<string, unknown>[]> = {
+  meta: {
+    code: HttpStatus;
+    message?: string;
+    pagination?: {
+      total: number;
+      current: number;
+      next: number;
+      prev: number;
+      per_page: number;
+    };
+  };
+  data: T[];
+};
+
+export type OrctaneListQuery = {
+  per_page?: number;
+  page?: number;
+};
