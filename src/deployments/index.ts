@@ -1,7 +1,11 @@
 import type { Orctane } from '../orctane';
 import { isEmpty } from '../utils/is-empty';
 import type { OrctaneListQuery } from '../utils/types';
-import type {DeploymentListResponse, DeploymentResponse} from './types';
+import type {
+  DeploymentArtifactsListResponse,
+  DeploymentListResponse,
+  DeploymentResponse,
+} from './types';
 
 export class Deployments {
   constructor(
@@ -19,8 +23,10 @@ export class Deployments {
     );
   }
 
-  async artifacts(version = 'latest'): Promise<unknown> {
-    return await this.orctane.get<unknown>(
+  async artifacts(
+    version = 'latest',
+  ): Promise<DeploymentArtifactsListResponse> {
+    return await this.orctane.get<DeploymentArtifactsListResponse>(
       `/deployments/${this.projectId}/artifacts/${version}`,
     );
   }
@@ -39,4 +45,3 @@ export class Deployments {
     return await this.orctane.get<DeploymentResponse>(path);
   }
 }
-

@@ -6,7 +6,7 @@ import { Emails } from './email';
 import { Domains } from './domains';
 import { Projects } from './projects';
 
-const defaultBaseUrl = 'https://api.orctane.com/v1';
+const defaultBaseUrl = 'https://client.orctane.com';
 const defaultUserAgent = `orctane-node:${version}`;
 
 const baseURL =
