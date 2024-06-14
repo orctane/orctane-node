@@ -1,6 +1,9 @@
 import type { OrctaneSuccessResponse } from '../../utils/types';
 
 export class SendPageOptions {
+  /** The orctane page/template */
+  page: string;
+
   /** The e-mail address of the sender. All e-mail addresses can be plain 'sender@server.com' or formatted 'Sender Name <sender@server.com>' */
   from: string;
 
