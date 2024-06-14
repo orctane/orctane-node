@@ -1,6 +1,6 @@
 {
   "name": "@orctane/node",
-  "version": "1.0.0-beta-1",
+  "version": "1.0.0",
   "description": "Node.js library for the Orctane API",
   "main": "index.js",
   "scripts": {
