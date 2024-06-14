@@ -4,13 +4,18 @@ import { Deployments } from '../deployments';
 import type { ProjectListResponse, ProjectResponse } from './types';
 
 export class Projects {
-  constructor(
-    private readonly orctane: Orctane,
-    private projectId?: string,
-  ) {}
+  readonly pages: Pages;
+  readonly deployments: Deployments;
 
-  readonly pages = new Pages(this.orctane, this.projectId);
-  readonly deployments = new Deployments(this.orctane, this.projectId);
+  constructor(
+    protected orctane: Orctane,
+    protected projectId?: string,
+  ) {
+    this.orctane = orctane;
+    this.projectId = projectId;
+    this.pages = new Pages(orctane, this.projectId);
+    this.deployments = new Deployments(orctane, this.projectId);
+  }
 
   static factory(orctane: Orctane) {
     return (id?: string) => new Projects(orctane, id);
