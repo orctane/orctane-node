@@ -72,6 +72,9 @@ export class SendEmailOptions extends BaseSendEmailOptions {
   project_id: string;
   template_id: string;
   provider: BaseProvider;
+  version?: string;
+  preview_text?: string;
+  variables?: Record<string, unknown>;
 }
 
 export type SendEmailResponse = OrctaneSuccessResponse<{ public_id: string }>;

@@ -1,11 +1,10 @@
-import type { BaseSendEmailOptions } from "../../base/types/send";
-import axios from "axios";
+import type { BaseSendEmailOptions } from '../../base/types/send';
 
 export enum ProviderType {
-  SENDGRID = "sendgrid",
-  SES = "ses",
-  POSTMARK = "postmark",
-  RESEND = "resend",
+  SENDGRID = 'sendgrid',
+  SES = 'ses',
+  POSTMARK = 'postmark',
+  RESEND = 'resend',
 }
 
 export abstract class BaseProvider {
@@ -18,7 +17,7 @@ export abstract class BaseProvider {
     this.type = type;
   }
 
-  async send(options: BaseSendEmailOptions): Promise<void> {
-    return;
+  async send(options: BaseSendEmailOptions): Promise<unknown> {
+    return options;
   }
 }

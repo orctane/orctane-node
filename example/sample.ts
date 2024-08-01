@@ -86,16 +86,46 @@ enum ReminderExpressions {
 }
 
 const reminder = workflow.wait
-  .reminder({ ttl: new Date("2024-12-31T"), id: "reminder.userId" })
-  .trigger(schedule);
-await reminder
+  .remind({ expires: new Date("2024-12-31T"), id: "reminder.userId" })
   .at("50%")
   .at("60%")
   .at(ReminderExpressions.EIGHTY_PERCENT)
-  .at(ReminderExpressions.EVERY_30_MINUTES_BETWEEN_9AM_AND_5PM);
+  .at(ReminderExpressions.EVERY_30_MINUTES_BETWEEN_9AM_AND_5PM)
+  .trigger(schedule);
 
+const cron = workflow.wait.cron({
+  id: "abc-userId-cron",
+  expression: "0 0-23/6 * * *",
+});
+cron.schedule(schedule);
+cron.cycle.skipNext(); // Skips the next cycle of the cron job, and Throws if no email was scheduled
+cron.cycle.skip(6); // Skips the next 6 cycles of the cron job, and Throws if no email was scheduled
+cron.cancel(); // Cancels a cron job
+cron.cycle.gt(5).cancel();
+cron.date.gte(new Date("2024-12-31T09:10:56.78Z")).cancel();
+
+// Calls the endpoint with a header of orctane-state, which is the user data and user secret token for verification.
+// Should call as a post with data such as { timestamp: 17792112345, cronId: 'abc-userId-cron', cron_status: 'cancelled' }
+cron.cycle
+  .eq(4)
+  .cancel()
+  .thenCall("https://api.orctane.com/user/<USER_ID>/cancel-subscription");
+
+cron.cycle
+  .eq(4)
+  .cancelled.thenCall(
+    "https://api.orctane.com/user/<USER_ID>/cancel-subscription",
+  );
+
+cron.date
+  .eq(new Date("2024-12-31T09:10:56.78Z"))
+  .cancelled.thenCall(
+    "https://api.orctane.com/user/<USER_ID>/cancel-subscription",
+  );
+
+const somethingHappened = true;
 // Manually cancel reminder
-if (someThingHappened) {
+if (somethingHappened) {
   await workflow.cancel("reminder.userId"); // All subsequent reminders get cancelled
 }
 
