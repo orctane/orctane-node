@@ -1,13 +1,13 @@
-import type { RequestHelper } from "../../../../../utils/helpers/request";
+import type { RequestHelper } from '../../../../../utils/helpers/request';
 
-export type WaitCronCycleConditionalType = "gt" | "gte" | "eq";
+export type CronCycleConditionalType = 'gt' | 'gte' | 'eq';
 
-export class WaitCronCycleConditionalThenable {
+export class CronCycleConditionalThenable {
   constructor(
     protected readonly request: RequestHelper,
     protected readonly projectId: string,
     protected readonly cronId: string,
-    protected readonly type: WaitCronCycleConditionalType,
+    protected readonly type: CronCycleConditionalType,
     protected readonly cycleCount: number,
   ) {}
 
@@ -34,12 +34,12 @@ export class WaitCronCycleConditionalThenable {
   }
 }
 
-export class WaitCronCycleConditionals {
+export class CronCycleConditionals {
   constructor(
     protected readonly request: RequestHelper,
     protected readonly projectId: string,
     protected readonly cronId: string,
-    protected readonly type: WaitCronCycleConditionalType,
+    protected readonly type: CronCycleConditionalType,
     protected readonly cycleCount: number,
   ) {}
 
@@ -55,7 +55,7 @@ export class WaitCronCycleConditionals {
   }
 
   get cancelled() {
-    return new WaitCronCycleConditionalThenable(
+    return new CronCycleConditionalThenable(
       this.request,
       this.projectId,
       this.cronId,

@@ -1,7 +1,7 @@
-import type { RequestHelper } from "../../../../utils/helpers/request";
-import { WaitCronCycleConditionals } from "./conditionals";
+import type { RequestHelper } from '../../../../utils/helpers/request';
+import { CronCycleConditionals } from './conditionals';
 
-export class WaitCronCycle {
+export class CronCycle {
   constructor(
     protected readonly request: RequestHelper,
     protected readonly projectId: string,
@@ -27,11 +27,11 @@ export class WaitCronCycle {
   }
 
   eq(cycleCount: number) {
-    return new WaitCronCycleConditionals(
+    return new CronCycleConditionals(
       this.request,
       this.projectId,
       this.cronId,
-      "eq",
+      'eq',
       cycleCount,
     );
   }

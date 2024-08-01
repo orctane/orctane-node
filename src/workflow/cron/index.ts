@@ -1,16 +1,16 @@
-import type { CronExpression } from "../../../utils/enums";
-import { RequestHelper } from "../../../utils/helpers/request";
+import type { CronExpression } from '../../../utils/enums';
+import { RequestHelper } from '../../../utils/helpers/request';
 
-export type WaitCronOptions = {
+export type CronOptions = {
   id: CronExpression | string;
   expression: string;
 };
 
-export class WaitCron {
+export class Cron {
   request: RequestHelper;
 
   constructor(
-    protected readonly options: WaitCronOptions,
+    protected readonly options: CronOptions,
     protected readonly key: string,
     protected readonly projectId: string,
   ) {
@@ -25,7 +25,7 @@ export class WaitCron {
   }
 
   get cycle() {
-    return new WaitCronCycle(this.request, this.projectId, this.options.id);
+    return new CronCycle(this.request, this.projectId, this.options.id);
   }
 
   cancel() {
