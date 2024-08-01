@@ -1,7 +1,6 @@
-import { WaitCron, type WaitCronOptions } from "./cron";
-import { WaitFor, type WaitForOptions } from "./for";
-import { WaitReminder, type WaitReminderOptions } from "./reminder";
-import { WaitUntil } from "./until";
+import { WaitFor, type WaitForOptions } from './for';
+import { WaitReminder, type WaitReminderOptions } from './reminder';
+import { WaitUntil } from './until';
 
 export class Wait {
   constructor(
@@ -19,9 +18,5 @@ export class Wait {
 
   remind(options: WaitReminderOptions) {
     return new WaitReminder(options, this.key, this.projectId);
-  }
-
-  cron(options: WaitCronOptions) {
-    return new WaitCron(options, this.key, this.projectId);
   }
 }

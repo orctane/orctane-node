@@ -1,6 +1,7 @@
-import { RequestHelper } from "../utils/helpers/request";
-import type { SendEmailOptions } from "./types/send";
-import { Template } from "../template";
+import { Template } from '../template';
+import { RequestHelper } from '../utils/helpers/request';
+import { Workflow, type WorkflowOptions } from '../workflow';
+import type { SendEmailOptions } from './types/send';
 
 export class Orctane {
   request: RequestHelper;
@@ -11,25 +12,24 @@ export class Orctane {
     this.template = new Template(key);
   }
 
-  send(options: SendEmailOptions) {
-    return this.request.post("/email/send", options);
+  async send(options: SendEmailOptions) {
+    const { data: template } = await this.template.get({
+      project_id: options.project_id,
+      template_id: options.template_id,
+      version: options.version,
+      variables: options.variables,
+      preview_text: options.preview_text,
+    });
+    const sendOptions: SendEmailOptions = {
+      ...options,
+      html: template.html,
+      text: template.text,
+    };
+
+    return await options.provider.send(sendOptions);
+  }
+
+  workflow(options: WorkflowOptions) {
+    return new Workflow(options, this.key as string);
   }
 }
-
-// const orctane = new Orctane('orc_1234556');
-
-// const provider = new ResendProvider('re_12345')
-
-// orctane.send({
-//   template_id: 'tm_3453f',
-//   project_id: 'po_5nsfso4sFe',
-//   to: ['recipient@example.com'],
-//   from: 'sender@example.com',
-//   subject: 'Test Email with Attachment',
-//   text: 'This is a test email with attachment.',
-//   html: '<p>This is a test email with attachment.</p>',
-//   bcc: ['bcc@example.com'],
-//   cc: ['cc@example.com'],
-//   reply_to: ['replyto@example.com'],
-//   provider: provider
-// })

@@ -1,7 +1,7 @@
-import axios from "axios";
-import type { BaseSendEmailOptions } from "../../base/types/send";
-import type { BaseProvider } from "../base";
-import { ProviderType } from "../base";
+import axios from 'axios';
+import type { BaseSendEmailOptions } from '../../base/types/send';
+import type { BaseProvider } from '../base';
+import { ProviderType } from '../base';
 
 export class ResendProvider implements BaseProvider {
   type: ProviderType = ProviderType.RESEND;
@@ -9,7 +9,7 @@ export class ResendProvider implements BaseProvider {
   constructor(public readonly key: string) {}
 
   async send(options: BaseSendEmailOptions) {
-    const url = "https://api.resend.com/emails";
+    const url = 'https://api.resend.com/emails';
     const payload = {
       to: options.to,
       from: options.from,
@@ -26,11 +26,17 @@ export class ResendProvider implements BaseProvider {
       }, {}),
     };
 
-    await axios.post(url, payload, {
-      headers: {
-        Authorization: `Bearer ${this.key}`,
-        "Content-Type": "application/json",
-      },
-    });
+    try {
+      const response = await axios.post(url, payload, {
+        headers: {
+          Authorization: `Bearer ${this.key}`,
+          'Content-Type': 'application/json',
+        },
+      });
+
+      return response.data;
+    } catch (e) {
+      console.log(e);
+    }
   }
 }

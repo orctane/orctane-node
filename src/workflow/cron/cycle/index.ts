@@ -1,4 +1,4 @@
-import type { RequestHelper } from '../../../../utils/helpers/request';
+import type { RequestHelper } from '../../../utils/helpers/request';
 import { CronCycleConditionals } from './conditionals';
 
 export class CronCycle {
@@ -8,8 +8,8 @@ export class CronCycle {
     protected readonly cronId: string,
   ) {}
 
-  skipNext() {
-    return this.request.post(
+  async skipNext() {
+    return await this.request.post(
       `/workflow/${this.projectId}/wait/cron/${this.cronId}/skip`,
       {
         cycle_count: 1,
@@ -17,8 +17,8 @@ export class CronCycle {
     );
   }
 
-  skip(cycleCount: number) {
-    return this.request.post(
+  async skip(cycleCount: number) {
+    return await this.request.post(
       `/workflow/${this.projectId}/wait/cron/${this.cronId}/skip`,
       {
         cycle_count: cycleCount,
@@ -27,6 +27,26 @@ export class CronCycle {
   }
 
   eq(cycleCount: number) {
+    return new CronCycleConditionals(
+      this.request,
+      this.projectId,
+      this.cronId,
+      'eq',
+      cycleCount,
+    );
+  }
+
+  gte(cycleCount: number) {
+    return new CronCycleConditionals(
+      this.request,
+      this.projectId,
+      this.cronId,
+      'gte',
+      cycleCount,
+    );
+  }
+
+  gt(cycleCount: number) {
     return new CronCycleConditionals(
       this.request,
       this.projectId,

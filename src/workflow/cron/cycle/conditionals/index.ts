@@ -1,4 +1,4 @@
-import type { RequestHelper } from '../../../../../utils/helpers/request';
+import type { RequestHelper } from '../../../../utils/helpers/request';
 
 export type CronCycleConditionalType = 'gt' | 'gte' | 'eq';
 

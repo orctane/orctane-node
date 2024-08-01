@@ -1,5 +1,6 @@
-import type { CronExpression } from '../../../utils/enums';
-import { RequestHelper } from '../../../utils/helpers/request';
+import type { CronExpression } from '../../utils/enums';
+import { RequestHelper } from '../../utils/helpers/request';
+import { CronCycle } from './cycle';
 
 export type CronOptions = {
   id: CronExpression | string;

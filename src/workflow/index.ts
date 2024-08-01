@@ -1,8 +1,9 @@
+import { Cron, type CronOptions } from './cron';
 import { Schedule, type ScheduleOptions } from './schedule';
 import { Wait } from './wait';
 
 export type WorkflowOptions = {
-  project_id: string;
+  projectId: string;
 };
 
 export class Workflow {
@@ -12,10 +13,14 @@ export class Workflow {
   ) {}
 
   get wait() {
-    return new Wait(this.key, this.options.project_id);
+    return new Wait(this.key, this.options.projectId);
+  }
+
+  cron(options: CronOptions) {
+    return new Cron(options, this.key, this.options.projectId);
   }
 
   schedule(options: ScheduleOptions) {
-    return new Schedule({ ...options, project_id: this.options.project_id });
+    return new Schedule({ ...options, project_id: this.options.projectId });
   }
 }
