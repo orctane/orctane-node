@@ -133,7 +133,7 @@ export type OrctaneListResponse<T extends Record<string, unknown>[]> = {
   data: T[];
 };
 
-export type OrctaneListQuery = {
-  per_page?: number;
-  page?: number;
+export type ListQuery = {
+  limit?: number;
+  take?: number;
 };

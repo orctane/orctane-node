@@ -9,11 +9,13 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "resolveJsonModule": true,
-    "target": "es6",
-    "module": "commonjs",
+    "target": "es2017",
+    "module": "esnext",
     "declaration": true,
     "outDir": "build",
     "strict": true
   },
-  "include": ["src"]
+  "include": [
+    "src"
+  ]
 }

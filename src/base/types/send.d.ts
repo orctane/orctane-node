@@ -1,6 +1,7 @@
-import type { OrctaneSuccessResponse } from '../../utils/types';
+import type { BaseProvider } from "../../providers/base";
+import type { OrctaneSuccessResponse } from "../../utils/types";
 
-export class SendEmailOptions {
+export class BaseSendEmailOptions {
   /** The e-mail address of the sender. All e-mail addresses can be plain 'sender@server.com' or formatted 'Sender Name <sender@server.com>' */
   from: string;
 
@@ -8,7 +9,7 @@ export class SendEmailOptions {
   sender?: string;
 
   /** The e-mail address of the recipient. All e-mail addresses can be plain 'recipient@server.com' or formatted 'Recipient Name <recipient@server.com>' */
-  to: string;
+  to: string[];
 
   /** Comma separated list or an array of recipients e-mail addresses that will appear on the Cc: field */
   cc?: string[];
@@ -32,6 +33,14 @@ export class SendEmailOptions {
   attachments?: Attachment[];
 
   tags?: Tag[];
+
+  headers?: Header[];
+}
+
+export class Header {
+  name: string;
+
+  value: string;
 }
 
 export class Attachment {
@@ -57,6 +66,12 @@ export class Tag {
    */
 
   value: string;
+}
+
+export class SendEmailOptions extends BaseSendEmailOptions {
+  project_id: string;
+  template_id: string;
+  provider: BaseProvider;
 }
 
 export type SendEmailResponse = OrctaneSuccessResponse<{ public_id: string }>;
