@@ -33,7 +33,22 @@ async function getTemplate() {
   console.log(template);
 }
 
-await getTemplate();
+// await getTemplate();
+
+async function getRawTemplate() {
+  const template = await orctane.template.getAllRaw(
+    'q2pf4b-BJUUA3cT4W99CyOqxDRc8',
+    {
+      version: 'latest',
+      per_page: 10,
+      page: 1,
+    },
+  );
+
+  console.log(template);
+}
+
+// await getRawTemplate();
 //
 // const workflow = orctane.workflow({
 //   projectId: 'uAh1XjVUdUfNPKyyvnL7T4AWwZDO',
