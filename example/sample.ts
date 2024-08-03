@@ -44,35 +44,40 @@ await orctane.send({
  */
 const workflow = await orctane.workflow({
   projectId: 'uAh1XjVUdUfNPKyyvnL7T4AWwZDO',
+  id: 'welcome-email-userId',
 });
 
 // Email that was scheduled
-const schedule = await workflow
-  .schedule({ id: 'welcome-email-userId', ttl: 50000 })
-  .send({
-    project_id: 'uAh1XjVUdUfNPKyyvnL7T4AWwZDO',
-    template_id: 'forgot_password',
-    version: 'latest',
-    subject: 'Welcome to Digisign',
-    preview_text: 'Hello World',
-    from: 'Orctane Onboarding <onboarding@orctane.dev>',
-    to: 'Jordan Clement <jordan@acme.com>',
-    provider: aws,
-    variables: {
-      passcode: '1234510',
-      expiresIn: '45 minutes',
-    },
-  });
+const schedule = await workflow.schedule({
+  template_id: 'forgot_password',
+  version: 'latest',
+  subject: 'Welcome to Digisign',
+  preview_text: 'Hello World',
+  from: 'Orctane Onboarding <onboarding@orctane.dev>',
+  to: 'Jordan Clement <jordan@acme.com>',
+  provider: aws,
+  variables: {
+    passcode: '1234510',
+    expiresIn: '45 minutes',
+  },
+});
 
 // Delay feature
 await workflow.wait.for({ minutes: 5 }).trigger(schedule);
 await workflow.wait.until(new Date('2024-12-31')).trigger(schedule);
 
+// Calls the endpoint with a header of orctane-state, which is the user data and user secret token for verification.
+const { id: linkId, url } = await workflow.link.create({
+  id: 'get-started',
+  url: 'https://client.example.com/something-happened?userId=123456789&email=jordan@acme.com',
+}); // Use URL in email, e.g as part of variables
+console.log(url);
+
 // Link Clicking Feature
 await workflow.link.when.clicked({ id: 'get-started' }).trigger(schedule);
 await workflow.link.when
-  .clicked({ id: 'get-started' })
-  .call('https://client.app.com/something-happened');
+  .clicked({ id: linkId })
+  .call('https://client.example.com/something-happened');
 
 // Reminder Feature
 enum ReminderExpressions {

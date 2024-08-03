@@ -50,26 +50,28 @@ async function getRawTemplate() {
 
 // await getRawTemplate();
 //
-// const workflow = orctane.workflow({
-//   projectId: 'uAh1XjVUdUfNPKyyvnL7T4AWwZDO',
-// });
+const workflow = orctane.workflow({
+  projectId: 'uAh1XjVUdUfNPKyyvnL7T4AWwZDO',
+});
 //
-// const schedule = await workflow
-//   .schedule({ id: 'welcome-email-userId', ttl: 50000 })
-//   .send({
-//     project_id: 'uAh1XjVUdUfNPKyyvnL7T4AWwZDO',
-//     template_id: 'forgot_password',
-//     version: 'latest',
-//     subject: 'Welcome to Digisign',
-//     preview_text: 'Hello World',
-//     from: 'Orctane Onboarding <onboarding@orctane.dev>',
-//     to: ['Jordan Clement <jordan@acme.com>'],
-//     provider: resend,
-//     variables: {
-//       passcode: '1234510',
-//       expiresIn: '45 minutes',
-//     },
-//   });
+async function getWorkflow() {
+  const schedule = await workflow
+    .schedule({ id: 'welcome-email-userId', ttl: 50000 })
+    .send({
+      project_id: 'uAh1XjVUdUfNPKyyvnL7T4AWwZDO',
+      template_id: 'forgot_password',
+      version: 'latest',
+      subject: 'Welcome to Digisign',
+      preview_text: 'Hello World',
+      from: 'Orctane Onboarding <onboarding@orctane.dev>',
+      to: ['Jordan Clement <jordan@acme.com>'],
+      provider: resend,
+      variables: {
+        passcode: '1234510',
+        expiresIn: '45 minutes',
+      },
+    });
+}
 //
 // const cron = workflow.cron({
 //   id: 'abc-userId-cron',
