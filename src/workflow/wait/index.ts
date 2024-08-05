@@ -1,22 +1,22 @@
 import { WaitFor, type WaitForOptions } from './for';
-import { WaitReminder, type WaitReminderOptions } from './reminder';
+import { WaitNotification, type WaitNotificationOptions } from './notification';
 import { WaitUntil } from './until';
 
 export class Wait {
   constructor(
     protected readonly key: string,
-    protected readonly projectId: string,
+    protected readonly workflowId: string,
   ) {}
 
   for(options: WaitForOptions) {
-    return new WaitFor(options, this.key, this.projectId);
+    return new WaitFor(options, this.key, this.workflowId);
   }
 
   until(date: Date) {
-    return new WaitUntil(date, this.key, this.projectId);
+    return new WaitUntil(date, this.key, this.workflowId);
   }
 
-  remind(options: WaitReminderOptions) {
-    return new WaitReminder(options, this.key, this.projectId);
+  notify(options: WaitNotificationOptions) {
+    return new WaitNotification(options, this.key, this.workflowId);
   }
 }

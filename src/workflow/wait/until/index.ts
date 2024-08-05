@@ -1,4 +1,4 @@
-import { RequestHelper } from "../../../utils/helpers/request";
+import { RequestHelper } from '../../../utils/helpers/request';
 
 export class WaitUntil {
   request: RequestHelper;
@@ -12,9 +12,11 @@ export class WaitUntil {
   }
 
   trigger(scheduleId: string) {
-    return this.request.post(`/workflow/${this.projectId}/wait/until`, {
-      schedule_id: scheduleId,
-      until: this.until,
-    });
+    return this.request.post(
+      `/workflows/${this.projectId}/wait/until/${scheduleId}`,
+      {
+        date: this.until,
+      },
+    );
   }
 }
