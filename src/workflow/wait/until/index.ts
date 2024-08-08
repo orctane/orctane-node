@@ -17,8 +17,8 @@ export class WaitUntil {
     this.request = new RequestHelper(key);
   }
 
-  trigger(scheduleId: string) {
-    return this.request.post<OrctaneSuccessResponse<WaitUntilResponse>>(
+  async trigger(scheduleId: string) {
+    return await this.request.post<OrctaneSuccessResponse<WaitUntilResponse>>(
       `/workflows/${this.projectId}/wait/until/${scheduleId}`,
       {
         date: this.until,

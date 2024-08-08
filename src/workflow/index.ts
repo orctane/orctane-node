@@ -66,10 +66,10 @@ export class Workflow {
     return res.data.id;
   }
 
-  cancel() {
+  async cancel() {
     if (!this.workflowId) {
       throw new Error('Workflow ID is not defined');
     }
-    return this.request.delete(`/workflows/${this.workflowId}/cancel`);
+    return await this.request.delete(`/workflows/${this.workflowId}/cancel`);
   }
 }

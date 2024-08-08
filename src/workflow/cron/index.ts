@@ -39,11 +39,11 @@ export class Cron {
     return this;
   }
 
-  cancel() {
+  async cancel() {
     if (!this.cronId) {
       throw new Error('Cron ID is not defined');
     }
-    return this.request.delete(
+    return await this.request.delete(
       `/workflow/${this.projectId}/wait/cron/${this.cronId}/cancel`,
     );
   }

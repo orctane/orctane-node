@@ -27,16 +27,15 @@ export class WaitNotification {
     return this;
   }
 
-  trigger(scheduleId: string) {
+  async trigger(scheduleId: string) {
     if (isEmpty(this.durations)) {
       throw new Error('No durations provided');
     }
-    return this.request.post<OrctaneSuccessResponse<WaitNotificationResponse>>(
-      `/workflows/${this.workflowId}/wait/notifications/${scheduleId}`,
-      {
-        intervals: this.durations,
-        expires: this.options.expires,
-      },
-    );
+    return await this.request.post<
+      OrctaneSuccessResponse<WaitNotificationResponse>
+    >(`/workflows/${this.workflowId}/wait/notifications/${scheduleId}`, {
+      intervals: this.durations,
+      expires: this.options.expires,
+    });
   }
 }

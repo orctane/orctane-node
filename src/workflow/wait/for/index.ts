@@ -25,8 +25,8 @@ export class WaitFor {
     this.request = new RequestHelper(key);
   }
 
-  trigger(scheduleId: string) {
-    return this.request.post<OrctaneSuccessResponse<WaitForResponse>>(
+  async trigger(scheduleId: string) {
+    return await this.request.post<OrctaneSuccessResponse<WaitForResponse>>(
       `/workflows/${this.workflowId}/wait/for/${scheduleId}`,
       this.options,
     );
