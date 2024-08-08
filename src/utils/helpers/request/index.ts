@@ -3,8 +3,8 @@ import axios, { AxiosError } from 'axios';
 import { version } from '../../../../package.json';
 import { OrctaneError } from '../../error';
 
-const defaultBaseUrl = 'http://localhost:5662';
-// const defaultBaseUrl = 'https://client.orctane.com';
+// const defaultBaseUrl = 'http://localhost:5662';
+const defaultBaseUrl = 'https://client.orctane.com';
 const defaultUserAgent = `orctane-node:${version}`;
 
 const baseURL =
