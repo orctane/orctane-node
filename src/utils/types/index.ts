@@ -118,7 +118,7 @@ export type OrctaneSuccessResponse<T extends Record<string, unknown>> = {
   data: T;
 };
 
-export type OrctaneListResponse<T extends Record<string, unknown>[]> = {
+export type ListResponse<T extends Record<string, unknown>[]> = {
   meta: {
     code: HttpStatus;
     message?: string;
@@ -133,7 +133,7 @@ export type OrctaneListResponse<T extends Record<string, unknown>[]> = {
   data: T[];
 };
 
-export type OrctaneListQuery = {
-  per_page?: number;
+export type ListQuery = {
   page?: number;
+  per_page?: number;
 };
