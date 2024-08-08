@@ -150,9 +150,11 @@ const schema = {
 
 cron.cycle.skipNext(); // Skips the next cycle of the cron job, and Throws if no email was scheduled
 cron.cycle.skip(6); // Skips the next 6 cycles of the cron job, and Throws if no email was scheduled
-cron.cancel(); // Cancels a cron job
+cron.cancel(); // Cancels a cron job// Cancels a cron job
 cron.cycle.gt(5).cancel();
+cron.cycle.eq(4).skip();
 cron.date.gte(new Date('2024-12-31T09:10:56.78Z')).cancel();
+cron.date.eq(new Date('2024-12-31T09:10:56.78Z')).cancel();
 
 // Calls the endpoint with a header of orctane-state, which is the user data and user secret token for verification.
 // Should call as a post with data such as { timestamp: 17792112345, cronId: 'abc-userId-cron', cron_status: 'cancelled' }

@@ -1,14 +1,21 @@
 import type { CronExpression } from '../../utils/enums';
 import { RequestHelper } from '../../utils/helpers/request';
-import { CronCycle } from './cycle';
+import type { OrctaneSuccessResponse } from '../../utils/types';
 
-export type CronOptions = {
-  id: CronExpression | string;
+export type CronResponse = {
+  id: string;
   expression: string;
 };
 
+export type CronOptions = {
+  limit?: number;
+  end?: Date;
+  expression: CronExpression | string;
+};
+
 export class Cron {
-  request: RequestHelper;
+  protected readonly request: RequestHelper;
+  protected cronId: string | undefined;
 
   constructor(
     protected readonly options: CronOptions,
@@ -18,20 +25,26 @@ export class Cron {
     this.request = new RequestHelper(key);
   }
 
-  schedule(scheduleId: string) {
-    return this.request.post(`/workflow/${this.projectId}/wait/cron`, {
-      schedule_id: scheduleId,
-      cron_options: this.options,
+  async schedule(scheduleId: string) {
+    const response = await this.request.post<
+      OrctaneSuccessResponse<CronResponse>
+    >(`/workflow/${this.projectId}/wait/cron/${scheduleId}`, {
+      expression: this.options.expression,
+      limit: this.options.limit,
+      end: this.options.end,
     });
-  }
 
-  get cycle() {
-    return new CronCycle(this.request, this.projectId, this.options.id);
+    this.cronId = response.data.id;
+
+    return this;
   }
 
   cancel() {
+    if (!this.cronId) {
+      throw new Error('Cron ID is not defined');
+    }
     return this.request.delete(
-      `/workflow/${this.projectId}/wait/cron/${this.options.id}/cancel`,
+      `/workflow/${this.projectId}/wait/cron/${this.cronId}/cancel`,
     );
   }
 }

@@ -21,6 +21,6 @@ export class Workflow {
   }
 
   schedule(options: ScheduleOptions) {
-    return new Schedule({ ...options, project_id: this.options.projectId });
+    return new Schedule(options, this.key, this.options.projectId);
   }
 }

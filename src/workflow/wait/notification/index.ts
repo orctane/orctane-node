@@ -26,7 +26,7 @@ export class WaitNotification {
       throw new Error('No durations provided');
     }
     return this.request.post(
-      `/workflow/${this.workflowId}/wait/notification/${scheduleId}`,
+      `/workflows/${this.workflowId}/wait/notification/${scheduleId}`,
       {
         durations: this.durations,
         expires: this.options.expires,
