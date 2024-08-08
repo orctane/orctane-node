@@ -5,11 +5,14 @@ import type { OrctaneSuccessResponse } from '../../../utils/types';
 
 export type WaitNotificationResponse = { id: string; durations: number[] };
 
-export type WaitNotificationOptions = { expires: Date; uid: string };
+export type WaitNotificationOptions = { expires: Date };
 
 export class WaitNotification {
   request: RequestHelper;
-  durations: (NotificationExpressions | string)[] = [];
+  durations: {
+    expression: NotificationExpressions | string;
+    timezone?: string;
+  }[] = [];
 
   constructor(
     private readonly options: WaitNotificationOptions,
@@ -19,8 +22,8 @@ export class WaitNotification {
     this.request = new RequestHelper(key);
   }
 
-  add(duration: NotificationExpressions | string) {
-    this.durations.push(duration);
+  add(expression: NotificationExpressions | string, timezone?: string) {
+    this.durations.push({ expression, timezone });
     return this;
   }
 
@@ -29,11 +32,10 @@ export class WaitNotification {
       throw new Error('No durations provided');
     }
     return this.request.post<OrctaneSuccessResponse<WaitNotificationResponse>>(
-      `/workflows/${this.workflowId}/wait/notification/${scheduleId}`,
+      `/workflows/${this.workflowId}/wait/notifications/${scheduleId}`,
       {
-        durations: this.durations,
+        intervals: this.durations,
         expires: this.options.expires,
-        uid: this.options.uid,
       },
     );
   }

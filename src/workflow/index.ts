@@ -1,5 +1,6 @@
 import type { SendEmailOptions } from '../base/types/send';
 import { RequestHelper } from '../utils/helpers/request';
+import { omit, omitBy } from '../utils/omit';
 import type { OrctaneSuccessResponse } from '../utils/types';
 import { Cron, type CronOptions } from './cron';
 import type { CreateWorkflowResponse, ScheduleResponse } from './types';
@@ -38,12 +39,30 @@ export class Workflow {
     return new Cron(options, this.key, this.workflowId);
   }
 
-  async schedule(options: SendEmailOptions): Promise<string> {
+  async schedule(
+    options: Omit<SendEmailOptions, 'project_id'>,
+  ): Promise<string> {
+    const providerType = options.provider.type;
+    const providerSecret = omitBy(
+      {
+        key: options.provider.key,
+        access_key_id: options.provider.credentials?.accessKeyId,
+        secret_access_key: options.provider.credentials?.secretAccessKey,
+        region: options.provider.credentials?.region,
+      },
+      (value) => value === undefined,
+    );
+
+    const body = {
+      provider_type: providerType,
+      provider_secret: providerSecret,
+      ...omit(options, ['provider', 'template_id']),
+    };
+
     const res = await this.request.post<
       OrctaneSuccessResponse<ScheduleResponse>
-    >(`/workflows/schedule/${this.workflowId}`, {
-      options,
-    });
+    >(`/workflows/${this.workflowId}/schedule/${options.template_id}`, body);
+
     return res.data.id;
   }
 

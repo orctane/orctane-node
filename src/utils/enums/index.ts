@@ -85,6 +85,8 @@ export enum CronExpression {
 }
 
 export enum NotificationExpressions {
+  FIVE_MINUTES_BEFORE = '-5m',
+  TEN_MINUTES_BEFORE = '-10m',
   THIRTY_MINUTES_BEFORE = '-30m',
   AN_HOUR_BEFORE = '-1h',
   AN_HOUR_AND_30_MINUTES_BEFORE = '-1h -30m',

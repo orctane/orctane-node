@@ -9,7 +9,7 @@ export enum ProviderType {
 
 export abstract class BaseProvider {
   key?: string;
-  options?: Record<string, string>;
+  credentials?: Record<string, string>;
   type: ProviderType;
 
   constructor(key: string, type: ProviderType) {

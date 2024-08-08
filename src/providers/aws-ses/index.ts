@@ -21,22 +21,27 @@ type SESProviderOptions = {
 
 export class SESProvider implements BaseProvider {
   type: ProviderType = ProviderType.SES;
+  readonly credentials: Record<string, string>;
   protected readonly client: SESv2Client;
   protected readonly transporter: Transporter<SentMessageInfo>;
 
   constructor(public readonly options: SESProviderOptions) {
+    const credentials = {
+      secretAccessKey: options.secretAccessKey,
+      accessKeyId: options.accessKeyId,
+      region: options.region,
+    };
     this.client = new SESv2Client({
       region: options.region,
-      credentials: {
-        secretAccessKey: options.secretAccessKey,
-        accessKeyId: options.accessKeyId,
-      },
+      credentials,
     });
 
     this.transporter = createTransport({
       streamTransport: true,
       buffer: true,
     });
+
+    this.credentials = credentials;
   }
 
   async send(options: BaseSendEmailOptions) {

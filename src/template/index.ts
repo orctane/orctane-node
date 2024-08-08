@@ -5,7 +5,7 @@ import type { GetTemplateOptions, TemplateResponse } from './types';
 export class Template {
   request: RequestHelper;
 
-  constructor(public readonly key?: string) {
+  constructor(public readonly key: string) {
     this.request = new RequestHelper(key);
   }
 

@@ -59,13 +59,13 @@ export class RequestHelper {
 
   async post<T>(
     path: string,
-    body?: unknown,
+    data?: unknown,
     options: Omit<AxiosRequestConfig, 'method'> = {},
   ) {
-    const requestOptions = {
+    const requestOptions: AxiosRequestConfig = {
       method: 'POST',
       headers: this.headers,
-      body: JSON.stringify(body),
+      data,
       ...options,
     };
 
@@ -84,13 +84,13 @@ export class RequestHelper {
 
   async put<T>(
     path: string,
-    entity: unknown,
+    data: unknown,
     options: Omit<AxiosRequestConfig, 'method'> = {},
   ) {
     const requestOptions = {
       method: 'PUT',
       headers: this.headers,
-      body: JSON.stringify(entity),
+      data,
       ...options,
     };
 
@@ -99,13 +99,13 @@ export class RequestHelper {
 
   async patch<T>(
     path: string,
-    entity: unknown,
+    data: unknown,
     options: Omit<AxiosRequestConfig, 'method'> = {},
   ) {
     const requestOptions = {
       method: 'PATCH',
       headers: this.headers,
-      body: JSON.stringify(entity),
+      data,
       ...options,
     };
 
