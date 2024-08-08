@@ -213,3 +213,11 @@ await orctane.template.get({
 await orctane.template.getAllRaw({
   projectId: 'uAh1XjVUdUfNPKyyvnL7T4AWwZDO',
 });
+
+/**
+ *       "x-ratelimit-remaining-second": "4999",
+ *       "x-ratelimit-limit-second": "5000",
+ *       "ratelimit-limit": "5000",
+ *       "ratelimit-remaining": "4999",
+ *       "ratelimit-reset": "1",
+ */

@@ -1,6 +1,9 @@
 import type { NotificationExpressions } from '../../../utils/enums';
 import { RequestHelper } from '../../../utils/helpers/request';
 import { isEmpty } from '../../../utils/is-empty';
+import type { OrctaneSuccessResponse } from '../../../utils/types';
+
+export type WaitNotificationResponse = { id: string; durations: number[] };
 
 export type WaitNotificationOptions = { expires: Date; uid: string };
 
@@ -25,7 +28,7 @@ export class WaitNotification {
     if (isEmpty(this.durations)) {
       throw new Error('No durations provided');
     }
-    return this.request.post(
+    return this.request.post<OrctaneSuccessResponse<WaitNotificationResponse>>(
       `/workflows/${this.workflowId}/wait/notification/${scheduleId}`,
       {
         durations: this.durations,
@@ -35,12 +38,3 @@ export class WaitNotification {
     );
   }
 }
-
-// const b = new WaitNotification(
-//   { expires: new Date("2024-12-31T"), id: "reminder.userId" },
-//   "",
-//   "",
-// );
-// await b.at(NotificationExpressions.AT_10_PERCENT)
-//   .at(NotificationExpressions.AT_30_PERCENT)
-//   .trigger('abc')

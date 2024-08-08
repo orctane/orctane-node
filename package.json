@@ -5,9 +5,7 @@
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
-  "files": [
-    "dist/**"
-  ],
+  "files": ["dist/**"],
   "engines": {
     "node": ">=18"
   },
@@ -60,5 +58,5 @@
     "axios": "^1.7.2",
     "nodemailer": "^6.9.14"
   },
-  "packageManager": "pnpm@9.3.0"
+  "packageManager": "pnpm@9.7.0"
 }

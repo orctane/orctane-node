@@ -19,19 +19,7 @@ const userAgent =
 
 export class RequestHelper {
   private readonly headers: Record<string, string>;
-  constructor(public readonly key?: string) {
-    if (!key) {
-      if (typeof process !== 'undefined' && process.env.ORCTANE_API_KEY) {
-        this.key = process.env.ORCTANE_API_KEY as string;
-      }
-
-      if (!this.key) {
-        throw new Error(
-          'Missing API key. Pass it to the constructor `new Orctane("orc_ABC123")` or set the ORCTANE_API_KEY environment variable.',
-        );
-      }
-    }
-
+  constructor(public readonly key: string) {
     this.headers = {
       Authorization: `Bearer ${this.key}`,
       'User-Agent': userAgent,

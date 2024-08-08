@@ -2,62 +2,53 @@
 
 Node.js library for the Orctane API.
 
+## Prerequisites
+
+To get the most out of this guide, you’ll need to:
+- [Create an API key](https://orctane.com/dashboard/api-keys)
+- [Create a project](https://orctane.com/dashboard)
+
 ## Install
 
 ```bash
 npm install @orctane/node
 # or
 bun add @orctane/node
+#or 
+yarn add @orctane/node
+or
+pnpm add @orctane/node
 ```
 
 ## Examples
+The easiest way to send an email is by using the provider parameter.
 
-Send email with:
+```ts server.ts
+import Orctane, { ResendProvider } from '@orctane/node';
 
-- [Node.js](https://github.com/orctane/orctane-node-example)
-- [Next.js (App Router)](https://github.com/orctane/orctane-nextjs-app-router-example)
-- [Next.js (Pages Router)](https://github.com/orctane/orctane-nextjs-pages-router-example)
-- [Express](https://github.com/orctane/orctane-express-example)
-
-## Setup
-
-First, you need to get an API key, which is available in the [Orctane Dashboard](https://orctane.com).
-
-```js
-import { Orctane } from 'orctane';
 const orctane = new Orctane('orc_123456789');
-```
 
-## Usage
+const resend = await ResendProvider('API_KEY');
 
-Send your first email:
-
-```js
-await orctane.pages.send({
-  page: 'welcome',
-  from: 'you@example.com',
-  to: 'user@gmail.com',
-  subject: 'hello world',
+await orctane.send({
+  project_id: '<PROJECT_ID>',
+  template_id: '<TEMPLATE_ID>', // e.g. forgot_password
+  version: 'latest',
+  subject: 'Your forgot password link',
+  preview_text: 'Hello World',
+  from: 'Orctane Onboarding <onboarding@orctane.dev>',
+  to: ['Jordan Henshaw <jordan@acme.com>'],
+  provider: resend,
   variables: {
-    username: 'John',
-    product: 'MyApp',
-    cost: '$10.99'
-  }
+    passcode: '1234510',
+    expiresIn: '45 minutes',
+  },
 });
+    
 ```
 
-## Send email using HTML
 
-Send an email custom HTML content:
 
-```js
-await orctane.emails.send({
-  from: 'you@example.com',
-  to: 'user@gmail.com',
-  subject: 'hello world',
-  html: '<strong>it works!</strong>',
-});
-```
 
 ## License
 

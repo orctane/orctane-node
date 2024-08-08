@@ -1,15 +1,26 @@
 import { Template } from '../template';
-import { RequestHelper } from '../utils/helpers/request';
-import { Workflow, type WorkflowOptions } from '../workflow';
+import { Workflow } from '../workflow';
 import type { SendEmailOptions } from './types/send';
 
 export class Orctane {
-  request: RequestHelper;
   template: Template;
+  workflow: Workflow;
 
-  constructor(public readonly key?: string) {
-    this.request = new RequestHelper(key);
+  constructor(public readonly key: string) {
+    if (!key) {
+      if (typeof process !== 'undefined' && process.env.ORCTANE_API_KEY) {
+        this.key = process.env.ORCTANE_API_KEY as string;
+      }
+
+      if (!this.key) {
+        throw new Error(
+          'Missing API key. Pass it to the constructor `new Orctane("orc_ABC123")` or set the ORCTANE_API_KEY environment variable.',
+        );
+      }
+    }
+
     this.template = new Template(key);
+    this.workflow = new Workflow(key);
   }
 
   async send(options: SendEmailOptions) {
@@ -27,9 +38,5 @@ export class Orctane {
     };
 
     return await options.provider.send(sendOptions);
-  }
-
-  workflow(options: WorkflowOptions) {
-    return new Workflow(options, this.key as string);
   }
 }

@@ -1,13 +1,17 @@
-import SESClientModule, { SESv2Client } from "@aws-sdk/client-sesv2";
-import type { BaseSendEmailOptions } from "../../base/types/send";
-import type { BaseProvider } from "../base";
-import { ProviderType } from "../base";
 import {
-  createTransport,
-  type Transporter,
+  SESv2Client,
+  SendEmailCommand,
+  type SendEmailCommandInput,
+} from '@aws-sdk/client-sesv2';
+import {
   type SendMailOptions as NodeMailerSendOptions,
-} from "nodemailer";
-import type SESTransport from "nodemailer/lib/ses-transport";
+  type SentMessageInfo,
+  type Transporter,
+  createTransport,
+} from 'nodemailer';
+import type { BaseSendEmailOptions } from '../../base/types/send';
+import type { BaseProvider } from '../base';
+import { ProviderType } from '../base';
 
 type SESProviderOptions = {
   region: string;
@@ -18,7 +22,7 @@ type SESProviderOptions = {
 export class SESProvider implements BaseProvider {
   type: ProviderType = ProviderType.SES;
   protected readonly client: SESv2Client;
-  protected readonly transporter: Transporter<SESTransport.SentMessageInfo>;
+  protected readonly transporter: Transporter<SentMessageInfo>;
 
   constructor(public readonly options: SESProviderOptions) {
     this.client = new SESv2Client({
@@ -30,7 +34,8 @@ export class SESProvider implements BaseProvider {
     });
 
     this.transporter = createTransport({
-      SES: { ses: this.client, aws: SESClientModule },
+      streamTransport: true,
+      buffer: true,
     });
   }
 
@@ -53,6 +58,30 @@ export class SESProvider implements BaseProvider {
         content: att.content,
       })),
     };
-    await this.transporter.sendMail(config);
+    const { message: mimeMessage } = await this.transporter.sendMail(config);
+
+    // Convert to Uint8Array
+    const raw = new TextEncoder().encode(mimeMessage.toString());
+    const input: SendEmailCommandInput = {
+      Content: {
+        Raw: {
+          Data: raw,
+        },
+      },
+      Destination: {
+        ToAddresses: options.to,
+        BccAddresses: options.bcc,
+        CcAddresses: options.cc,
+      },
+      ReplyToAddresses: options.reply_to,
+      FromEmailAddress: options.from,
+      EmailTags: options.tags?.map((tag) => ({
+        Name: tag.name,
+        Value: tag.value,
+      })),
+    };
+
+    const command = new SendEmailCommand(input);
+    return await this.client.send(command);
   }
 }

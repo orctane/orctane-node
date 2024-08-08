@@ -1,4 +1,10 @@
 import { RequestHelper } from '../../../utils/helpers/request';
+import type { OrctaneSuccessResponse } from '../../../utils/types';
+
+export type WaitForResponse = {
+  id: string;
+  ttl: number;
+};
 
 export type WaitForOptions = {
   weeks?: number;
@@ -20,7 +26,7 @@ export class WaitFor {
   }
 
   trigger(scheduleId: string) {
-    return this.request.post(
+    return this.request.post<OrctaneSuccessResponse<WaitForResponse>>(
       `/workflows/${this.workflowId}/wait/for/${scheduleId}`,
       this.options,
     );
