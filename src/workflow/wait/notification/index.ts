@@ -11,7 +11,6 @@ export class WaitNotification {
   request: RequestHelper;
   durations: {
     expression: NotificationExpressions | string;
-    timezone?: string;
   }[] = [];
 
   constructor(
@@ -22,8 +21,8 @@ export class WaitNotification {
     this.request = new RequestHelper(key);
   }
 
-  add(expression: NotificationExpressions | string, timezone?: string) {
-    this.durations.push({ expression, timezone });
+  add(expression: NotificationExpressions | string) {
+    this.durations.push({ expression });
     return this;
   }
 

@@ -13,7 +13,7 @@ export class Wait {
   }
 
   until(date: Date) {
-    return new WaitUntil(date, this.key, this.workflowId);
+    return new WaitUntil({ date }, this.key, this.workflowId);
   }
 
   notify(options: WaitNotificationOptions) {
