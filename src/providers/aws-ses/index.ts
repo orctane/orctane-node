@@ -10,8 +10,10 @@ import {
   createTransport,
 } from 'nodemailer';
 import type { BaseSendEmailOptions } from '../../base/types/send';
-import type { BaseProvider } from '../base';
+import { BaseProvider, ProviderError } from '../base';
 import { ProviderType } from '../base';
+import { AxiosError } from 'axios';
+import { HttpStatus } from '../../utils/types';
 
 type SESProviderOptions = {
   region: string;
@@ -87,6 +89,18 @@ export class SESProvider implements BaseProvider {
     };
 
     const command = new SendEmailCommand(input);
-    return await this.client.send(command);
+    try {
+      return await this.client.send(command);
+    } catch (e: any) {
+      if (e instanceof AxiosError) {
+        throw ProviderError.factory(
+          e.response?.data ?? {
+            statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
+            message: 'Something went wrong with AWS SES',
+          }
+        );
+      }
+      throw new ProviderError(e.message, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
   }
 }

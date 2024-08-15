@@ -1,7 +1,8 @@
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import type { BaseSendEmailOptions } from '../../base/types/send';
-import type { BaseProvider } from '../base';
+import { BaseProvider, ProviderError } from '../base';
 import { ProviderType } from '../base';
+import { HttpStatus } from '../../utils/types';
 
 export class PostmarkProvider implements BaseProvider {
   type: ProviderType = ProviderType.POSTMARK;
@@ -28,11 +29,23 @@ export class PostmarkProvider implements BaseProvider {
       MessageStream: 'outbound',
     };
 
-    await axios.post(url, payload, {
-      headers: {
-        'X-Postmark-Server-Token': this.key,
-        'Content-Type': 'application/json',
-      },
-    });
+    try {
+      await axios.post(url, payload, {
+        headers: {
+          'X-Postmark-Server-Token': this.key,
+          'Content-Type': 'application/json',
+        },
+      });
+    } catch (e: any) {
+      if (e instanceof AxiosError) {
+        throw ProviderError.factory(
+          e.response?.data ?? {
+            statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
+            message: 'Something went wrong with postmark',
+          }
+        );
+      }
+      throw new ProviderError(e.message, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
   }
 }

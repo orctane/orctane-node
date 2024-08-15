@@ -45,7 +45,7 @@ export class RequestHelper {
       });
 
       return response.data;
-    } catch (err) {
+    } catch (err: any) {
       if (err instanceof AxiosError) {
         const message =
           err.response?.data?.message ?? err.message ?? 'Something went wrong';
@@ -53,7 +53,7 @@ export class RequestHelper {
         throw new OrctaneError(message, status);
       }
 
-      throw err;
+      throw  new OrctaneError(err.message, 500);
     }
   }
 

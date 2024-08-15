@@ -1,4 +1,5 @@
 import type { BaseSendEmailOptions } from '../../base/types/send';
+import {HttpStatus, HttpStatusText} from "../../utils/types";
 
 export enum ProviderType {
   SENDGRID = 'sendgrid',
@@ -19,5 +20,34 @@ export abstract class BaseProvider {
 
   async send(options: BaseSendEmailOptions): Promise<unknown> {
     return options;
+  }
+}
+
+export class ProviderError extends Error {
+  readonly name: string;
+  readonly error: string;
+
+  constructor(message: string, statusCode: HttpStatus) {
+    super();
+    this.message = message;
+    this.name = statusCode.toString();
+    this.error = HttpStatusText[statusCode];
+  }
+
+  static factory(response: Record<string, any>) {
+    const error = response;
+    return new ProviderError(error.message, error.statusCode);
+  }
+
+  override toString() {
+    return JSON.stringify(
+        {
+          message: this.message,
+          status_code: this.name,
+          error: this.error,
+        },
+        null,
+        2,
+    );
   }
 }

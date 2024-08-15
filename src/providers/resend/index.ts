@@ -1,7 +1,8 @@
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import type { BaseSendEmailOptions } from '../../base/types/send';
-import type { BaseProvider } from '../base';
+import { BaseProvider, ProviderError } from '../base';
 import { ProviderType } from '../base';
+import { HttpStatus } from '../../utils/types';
 
 export class ResendProvider implements BaseProvider {
   type: ProviderType = ProviderType.RESEND;
@@ -35,8 +36,16 @@ export class ResendProvider implements BaseProvider {
       });
 
       return response.data;
-    } catch (e) {
-      console.log(e);
+    } catch (e: any) {
+      if (e instanceof AxiosError) {
+        throw ProviderError.factory(
+          e.response?.data ?? {
+            statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
+            message: 'Something went wrong with resend',
+          }
+        );
+      }
+      throw new ProviderError(e.message, HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 }
