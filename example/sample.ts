@@ -66,19 +66,6 @@ const schedule = await workflow.schedule({
 await workflow.wait.for({ minutes: 5 }).trigger(schedule);
 await workflow.wait.until(new Date('2024-12-31')).trigger(schedule);
 
-// Calls the endpoint with a header of orctane-state, which is the user data and user secret token for verification.
-const { id: linkId, url } = await workflow.link.create({
-  id: 'get-started',
-  url: 'https://client.example.com/something-happened?userId=123456789&email=jordan@acme.com',
-}); // Use URL in email, e.g as part of variables
-console.log(url);
-
-// Link Clicking Feature
-await workflow.link.when.clicked({ id: 'get-started' }).trigger(schedule);
-await workflow.link.when
-  .clicked({ id: linkId })
-  .call('https://client.example.com/something-happened');
-
 // Reminder Feature
 enum ReminderExpressions {
   THIRTY_MINUTES_BEFORE = '80%',
@@ -166,13 +153,13 @@ cron.cycle
 cron.cycle
   .eq(4)
   .cancelled.thenCall(
-    'https://api.orctane.com/user/<USER_ID>/cancel-subscription',
+    'https://api.orctane.com/user/<USER_ID>/cancel-subscription'
   );
 
 cron.date
   .eq(new Date('2024-12-31T09:10:56.78Z'))
   .cancelled.thenCall(
-    'https://api.orctane.com/user/<USER_ID>/cancel-subscription',
+    'https://api.orctane.com/user/<USER_ID>/cancel-subscription'
   );
 
 const somethingHappened = true;
@@ -221,3 +208,52 @@ await orctane.template.getAllRaw({
  *       "ratelimit-remaining": "4999",
  *       "ratelimit-reset": "1",
  */
+
+// Calls the endpoint with a header of orctane-state, which is the user data and user secret token for verification.
+const webhook = await orctane.link.create({
+  name: 'stripe-webhook',
+  method: 'post',
+});
+
+await webhook
+  .on('type=customer.subscription.updated')
+  .trigger(schedule)
+  .waitFor({ minutes: 10 })
+  .call({
+    endpoint: 'https://cms.orctane.com/do-something',
+    method: 'post',
+  });
+
+const { id: linkId, url } = await cms.link.create({
+  id: 'get-started',
+  url: 'https://client.example.com/something-happened?userId=123456789&email=jordan@acme.com',
+}); // Use URL in email, e.g as part of variables
+console.log(url);
+
+// Link Clicking Feature
+await cms.link.when.clicked({ id: 'get-started' }).trigger(schedule);
+await workflow.link.when
+  .clicked({ id: linkId })
+  .call('https://client.example.com/something-happened');
+
+await cms.link.create({
+  id: 'promo-link',
+  url: 'https://client.example.com/promo',
+  conditions: {
+    if: [
+      { field: 'user.status', equals: 'new', redirect: '/new-user-promo' },
+      {
+        field: 'user.status',
+        cond: 'eq',
+        value: 'new',
+        redirect: '/returning-user-promo',
+      },
+      {
+        field: 'user.status',
+        cond: 'eq',
+        value: 'returning',
+        redirect: '/returning-user-promo',
+      },
+    ],
+  },
+});

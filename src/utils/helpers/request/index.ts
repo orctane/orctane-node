@@ -4,7 +4,7 @@ import { version } from '../../../../package.json';
 import { OrctaneError } from '../../error';
 
 // const defaultBaseUrl = 'http://localhost:5662';
-const defaultBaseUrl = 'https://client.orctane.com';
+const defaultBaseUrl = 'https://cms.orctane.com';
 const defaultUserAgent = `orctane-node:${version}`;
 
 const baseURL =
@@ -36,7 +36,7 @@ export class RequestHelper {
 
   async makeRequest<T>(
     path: string,
-    options: AxiosRequestConfig = {},
+    options: AxiosRequestConfig = {}
   ): Promise<T> {
     try {
       const response = await this.request({
@@ -53,14 +53,14 @@ export class RequestHelper {
         throw new OrctaneError(message, status);
       }
 
-      throw  new OrctaneError(err.message, 500);
+      throw new OrctaneError(err.message, 500);
     }
   }
 
   async post<T>(
     path: string,
     data?: unknown,
-    options: Omit<AxiosRequestConfig, 'method'> = {},
+    options: Omit<AxiosRequestConfig, 'method'> = {}
   ) {
     const requestOptions: AxiosRequestConfig = {
       method: 'POST',
@@ -85,7 +85,7 @@ export class RequestHelper {
   async put<T>(
     path: string,
     data: unknown,
-    options: Omit<AxiosRequestConfig, 'method'> = {},
+    options: Omit<AxiosRequestConfig, 'method'> = {}
   ) {
     const requestOptions = {
       method: 'PUT',
@@ -100,7 +100,7 @@ export class RequestHelper {
   async patch<T>(
     path: string,
     data: unknown,
-    options: Omit<AxiosRequestConfig, 'method'> = {},
+    options: Omit<AxiosRequestConfig, 'method'> = {}
   ) {
     const requestOptions = {
       method: 'PATCH',
